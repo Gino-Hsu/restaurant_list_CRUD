@@ -1,0 +1,21 @@
+<form action="/restaurants" class="creat-form" method="post">
+  <label for="name">餐廳名稱：</label>
+  <input type="text" placeholder="name" name="name" id="name">
+  <label for="name_en">餐廳名稱-英文：</label>
+  <input type="text" placeholder="name_en" name="name_en" id="name_en">
+  <label for="category">類別：</label>
+  <input type="text" placeholder="category" name="category" id="category">
+  <label for="image">照片URL：</label>
+  <input type="text" placeholder="image" name="image" id="image">
+  <label for="location">地址：</label>
+  <input type="text" placeholder="location" name="location" id="location">
+  <label for="phone">電話：</label>
+  <input type="text" placeholder="phone" name="phone" id="phone">
+  <label for="google_map">Google 地圖：</label>
+  <input type="text" placeholder="google_map" name="google_map" id="google_map">
+  <label for="rating">評分：</label>
+  <input type="number" name="rating" min="0" max="5" step="0.1">
+  <label for="description">餐廳敘述：</label>
+  <textarea name="description" id="description" cols="30" rows="10"></textarea>
+  <button type="submit">Create</button>
+</form>
