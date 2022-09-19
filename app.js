@@ -85,12 +85,14 @@ app.post('/restaurants', (req, res) => {
 //   }
 // })
 
-// // render show page
-// app.get('/restaurants/:_id', (req, res) => {
-//   const resId = req.params.restaurant_id
-//   const restaurant = restaurantList.results.find(res => res.id.toString() === resId)
-//   res.render('show', {restaurant})
-// })
+// render show page
+app.get('/restaurants/:id', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then((restaurant) => {res.render('show', {restaurant})})
+    .catch(error => console.log(error))
+})
 
 app.listen(port, () => {
   console.log(`Express is listening on http://localhost:${port}`)
