@@ -27,7 +27,7 @@
 
 2. 將專案 clone 至本地，至終端機輸入：
    ```
-   git clone https://github.com/Gino-Hsu/restaurant_list.git
+   git clone https://github.com/Gino-Hsu/restaurant_list_CRUD.git
    ```
 
 3. 透過終端機進入資料夾位置，輸入：
