@@ -6,7 +6,7 @@ const exphbs = require('express-handlebars')
 const restaurantList = require('./restaurant.json')
 
 const mongoose = require('mongoose') //載入 mongoose
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
+mongoose.connect(process.env.MONGODB_restaurant_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 // setting template engine
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
