@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const Restaurant = require('./models/restaurant')
 
 const mongoose = require('mongoose') //載入 mongoose
+const restaurant = require('./models/restaurant')
 mongoose.connect(process.env.MONGODB_restaurant_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
 // setting template engine
@@ -67,23 +68,28 @@ app.post('/restaurants', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// // search for name, category, rating
-// app.get('/search', (req, res) => {
-//   const ratingSelect = req.query.rating
-//   const keyword = req.query.keyword.trim()
-//   const rating = req.query.rating
-//   const restaurants = restaurantList.results.filter(res => {
-//     if (res.rating >= Number(ratingSelect)) {
-//       return res.name.toLowerCase().includes(keyword.toLocaleLowerCase()) || res.category.includes(keyword)
-//     }
-//   })
-//   // can't find any restaurant by keyword
-//   if (restaurants.length === 0 && keyword.length !== 0) {
-//     res.render('error', {keyword, rating})
-//   } else {
-//     res.render('index', {restaurant: restaurants, keyword, rating})
-//   }
-// })
+// search for name, category, rating
+app.get('/search', (req, res) => {
+  const ratingSelect = req.query.rating
+  const keyword = req.query.keyword.trim()
+  const rating = req.query.rating
+  return Restaurant.find()
+    .lean()
+    .then((restaurant) => {
+      const restaurants = restaurant.filter(rest => {
+        if (rest.rating >= Number(ratingSelect)) {
+          return rest.name.toLowerCase().includes(keyword.toLocaleLowerCase()) || rest.category.includes(keyword)
+        }
+      })
+      // can't find any restaurant by keyword
+      if (restaurants.length === 0 && keyword.length !== 0) {
+        res.render('error', {keyword, rating})
+      } else {
+        res.render('index', {restaurant: restaurants, keyword, rating})
+      }
+    })
+    .catch(error => console.log(error))
+})
 
 // render show page
 app.get('/restaurants/:id', (req, res) => {
