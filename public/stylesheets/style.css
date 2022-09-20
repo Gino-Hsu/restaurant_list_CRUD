@@ -86,8 +86,12 @@ select.form-control:hover {
   transition: all 0.3s ease;
 }
 
+.card-columns .card {
+  margin-bottom: 0;
+}
+
 .card:hover {
-  transform: scale(0.95);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
 }
 
 .card img {
@@ -98,6 +102,17 @@ select.form-control:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.control {
+  display: flex;
+  background-color: #dfdddd;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.control a {
+  margin-right: 10px;
 }
 
 .restaurant-category {
@@ -128,6 +143,14 @@ select.form-control:hover {
 
 .error-text > i {
   margin-right: 1rem;
+}
+
+.show-control {
+  margin: 1.5rem auto;
+  width: 150px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 @keyframes scale-up {
