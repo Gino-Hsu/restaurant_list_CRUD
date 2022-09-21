@@ -6,6 +6,7 @@ const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const Restaurant = require('./models/restaurant')
+const routes = require('./routes') // 引用路由器
 
 const mongoose = require('mongoose') //載入 mongoose
 const restaurant = require('./models/restaurant')
@@ -19,6 +20,7 @@ app.set('view engine', 'hbs')
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+app.use(routes) // 將 request 導入路由器
 
 // 取得資料庫連線資料
 const db = mongoose.connection
@@ -29,137 +31,6 @@ db.on('error', () => {
 // 連線成功
 db.once('open', () => {
   console.log('mongodb connected!')
-})
-
-// routes setting
-app.get('/', (req, res) => {
-  Restaurant.find()
-    .lean()
-    .then(restaurant => res.render('index', { restaurant }))
-    .catch(error => console.log(error))
-})
-
-// create new restaurant
-app.get('/restaurants/new', (req,res) => {
-  return res.render('new')
-})
-
-app.post('/restaurants', (req, res) => {
-  const {name, name_en, category, image, location, phone, google_map, rating, description} = req.body
-
-  return Restaurant.create({
-    name,
-    name_en,
-    category,
-    image,
-    location,
-    phone,
-    google_map,
-    rating,
-    description
-  })
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-
-// search for name, category, rating
-app.get('/search', (req, res) => {
-  const keyword = req.query.keyword.trim()
-  const rating = req.query.rating
-  return Restaurant.find()
-    .lean()
-    .then((restaurant) => {
-      const restaurants = restaurant.filter(rest => {
-        if (rest.rating >= Number(rating)) {
-          return rest.name.toLowerCase().includes(keyword.toLocaleLowerCase()) || rest.category.includes(keyword)
-        }
-      })
-      // can't find any restaurant by keyword
-      if (restaurants.length === 0 && keyword.length !== 0) {
-        res.render('error', {keyword, rating})
-      } else {
-        res.render('index', {restaurant: restaurants, keyword, rating})
-      }
-    })
-    .catch(error => console.log(error))
-})
-
-//sort restaurant
-app.get('/sort', (req, res) => {
-  const sort = req.query.sort_type
-  if (sort === 'asc' || sort === 'desc') {
-    return Restaurant.find()
-    .lean()
-    .sort({_id: sort})
-    .then((restaurant) => {
-      res.render('index', {restaurant, sort})
-    })
-    .catch(error => console.log(error))
-  } else if (sort === 'category') {
-    return Restaurant.find()
-    .lean()
-    .sort({category: 'asc'})
-    .then((restaurant) => {
-      res.render('index', {restaurant, sort})
-    })
-    .catch(error => console.log(error))
-  } else if (sort === 'location') {
-    return Restaurant.find()
-    .lean()
-    .sort({location: 'asc'})
-    .then((restaurant) => {
-      res.render('index', {restaurant, sort})
-    })
-    .catch(error => console.log(error))
-  }
-})
-// render show page
-app.get('/restaurants/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .lean()
-    .then((restaurant) => {res.render('show', {restaurant})})
-    .catch(error => console.log(error))
-})
-
-// edit restaurant
-app.get('/restaurants/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .lean()
-    .then((restaurant) => {res.render('edit', {restaurant})})
-    .catch(error => console.log(error))
-})
-
-app.put('/restaurants/:id', (req, res) => {
-  const {name, name_en, category, image, location, phone, google_map, rating, description} = req.body
-  const id = req.params.id
-
-  return Restaurant.findById(id)
-    .then(restaurant => {
-      restaurant.name = name
-      restaurant.name_en = name_en
-      restaurant.category = category
-      restaurant.image = image
-      restaurant.location = location
-      restaurant.phone = phone
-      restaurant.google_map = google_map
-      restaurant.rating = rating
-      restaurant.description = description
-
-      return restaurant.save()
-    })
-    .then(() => res.redirect(`/restaurants/${id}`))
-    .catch(error => console.log(error))
-})
-
-// delete restaurant
-app.delete('/restaurants/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
-    .then(restaurant => restaurant.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
