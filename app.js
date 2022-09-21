@@ -43,15 +43,7 @@ app.get('/restaurants/new', (req,res) => {
 })
 
 app.post('/restaurants', (req, res) => {
-  const name = req.body.name
-  const name_en = req.body.name_en
-  const category = req.body.category
-  const image = req.body.image
-  const location = req.body.location
-  const phone = req.body.phone
-  const google_map = req.body.google_map
-  const rating = req.body.rating
-  const description = req.body.description
+  const {name, name_en, category, image, location, phone, google_map, rating, description} = req.body
 
   return Restaurant.create({
     name,
@@ -70,14 +62,13 @@ app.post('/restaurants', (req, res) => {
 
 // search for name, category, rating
 app.get('/search', (req, res) => {
-  const ratingSelect = req.query.rating
   const keyword = req.query.keyword.trim()
   const rating = req.query.rating
   return Restaurant.find()
     .lean()
     .then((restaurant) => {
       const restaurants = restaurant.filter(rest => {
-        if (rest.rating >= Number(ratingSelect)) {
+        if (rest.rating >= Number(rating)) {
           return rest.name.toLowerCase().includes(keyword.toLocaleLowerCase()) || rest.category.includes(keyword)
         }
       })
@@ -91,6 +82,35 @@ app.get('/search', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//sort restaurant
+app.get('/sort', (req, res) => {
+  const sort = req.query.sort_type
+  if (sort === 'asc' || sort === 'desc') {
+    return Restaurant.find()
+    .lean()
+    .sort({_id: sort})
+    .then((restaurant) => {
+      res.render('index', {restaurant, sort})
+    })
+    .catch(error => console.log(error))
+  } else if (sort === 'category') {
+    return Restaurant.find()
+    .lean()
+    .sort({category: 'asc'})
+    .then((restaurant) => {
+      res.render('index', {restaurant, sort})
+    })
+    .catch(error => console.log(error))
+  } else if (sort === 'location') {
+    return Restaurant.find()
+    .lean()
+    .sort({location: 'asc'})
+    .then((restaurant) => {
+      res.render('index', {restaurant, sort})
+    })
+    .catch(error => console.log(error))
+  }
+})
 // render show page
 app.get('/restaurants/:id', (req, res) => {
   const id = req.params.id
@@ -110,16 +130,8 @@ app.get('/restaurants/:id/edit', (req, res) => {
 })
 
 app.post('/restaurants/:id/edit', (req, res) => {
+  const {name, name_en, category, image, location, phone, google_map, rating, description} = req.body
   const id = req.params.id
-  const name = req.body.name
-  const name_en = req.body.name_en
-  const category = req.body.category
-  const image = req.body.image
-  const location = req.body.location
-  const phone = req.body.phone
-  const google_map = req.body.google_map
-  const rating = req.body.rating
-  const description = req.body.description
 
   return Restaurant.findById(id)
     .then(restaurant => {

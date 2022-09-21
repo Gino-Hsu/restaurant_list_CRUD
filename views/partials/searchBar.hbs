@@ -6,8 +6,12 @@
         <h4 class="mb-2">尋找餐廳：</h4>
         <div class="input-group">
           <select class="form-control" name="rating">
+            {{#if rating}}
             <option value="{{rating}}" style="display:none" selected>{{rating}}</option>
-            <option value="0">---不限評分---</option>
+            {{else}}
+            <option value="" style="display:none" selected>---不限評分---</option>
+            {{/if}}
+            <option value="">---不限評分---</option>
             <option value="2">2</option>
             <option value="2.5">2.5</option>
             <option value="3">3</option>
@@ -21,8 +25,22 @@
           </div>
         </div>
       </form>
-        <h4>新增餐廳：</h4>
-        <a href="./restaurants/new" class="new-create">前往新增餐廳</a>
+      <h4>新增餐廳：</h4>
+      <div class="d-flex justify-content-between">
+        <a href="./restaurants/new" class="new-create">前往新增餐廳</a>      
+        <div>
+          <form class="d-flex justify-content-between align-items-center" action="/sort" method="get">
+            <label class="d-flex align-items-center w-75" for="sort">排序：</label>
+            <select class="form-control" name="sort_type" id="sort" onchange="this.form.submit()">
+              <option value="{{sort}}" style="display:none" selected></option>
+              <option value="asc">A -> Z</option>
+              <option value="desc">Z -> A</option>
+              <option value="category">類別</option>
+              <option value="location">地區</option>
+            </select>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
