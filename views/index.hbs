@@ -25,7 +25,7 @@
               <div class="control">
                 <a href="/restaurants/{{this._id}}/edit">Edit</a>
                 <a href="/restaurants/{{this._id}}">Detail</a>
-                <form action="/restaurants/{{this._id}}/delete" method="post" style="display: inline;">
+                <form action="/restaurants/{{this._id}}?_method=DELETE" method="post" style="display: inline;">
                   <button type="submit" class="btn btn-major">Delete</button>
                 </form>
               </div>

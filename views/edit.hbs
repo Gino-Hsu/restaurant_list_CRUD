@@ -1,4 +1,4 @@
-<form action="/restaurants/{{restaurant._id}}/edit" class="creat-form" method="post">
+<form action="/restaurants/{{restaurant._id}}?_method=PUT" class="creat-form" method="post">
   <label for="name">餐廳名稱：</label>
   <input type="text" placeholder="name" name="name" id="name" value="{{restaurant.name}}">
   <label for="name_en">餐廳名稱-英文：</label>
